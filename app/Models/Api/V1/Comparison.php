@@ -9,7 +9,10 @@ class Comparison extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'room_id',
-    ];
+    protected $fillable = ['room_id'];
+
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
 }

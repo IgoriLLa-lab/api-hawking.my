@@ -10,18 +10,17 @@ use App\Models\Api\V1\Image;
 use App\Models\Api\V1\Mortgage;
 use App\Models\Api\V1\Property;
 use App\Models\Api\V1\Room;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Api\V1\RoomFavorite as Favorite;
 
 class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         Cache::forget('rooms');
 
@@ -41,10 +40,10 @@ class RoomController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Api\V1\StoreRoomRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public
-    function store(StoreRoomRequest $request)
+    function store(StoreRoomRequest $request): Response|RoomResource
     {
         $valReq = $request->validated();
 
@@ -81,11 +80,8 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
      */
-    public
-    function show($id)
+    public function show($id): Response
     {
         Cache::forever('one_room', new RoomResource(Room::with('city')->
         with('area')->
@@ -103,8 +99,8 @@ class RoomController extends Controller
      * Update the specified resource in storage.
      *
      * @param \App\Http\Requests\Api\V1\UpdateRoomRequest $request
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
+     * @param Room $room
+     * @return Response
      */
     public
     function update(UpdateRoomRequest $request, Room $room)
@@ -115,22 +111,12 @@ class RoomController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
+     * @param Room $room
+     * @return Response
      */
     public
     function destroy(StoreRoomRequest $request)
     {
-
-    }
-
-
-    public function like($id)
-    {
-
-        if (!Favorite::where(['room_id' => $id])->exists()) {
-            Favorite::create(['room_id' => $id]);
-        }
 
     }
 

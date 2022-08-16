@@ -56,12 +56,21 @@ class Room extends Model
         return $this->belongsToMany(Mortgage::class, 'mortgages_rooms');
     }
 
-    public function favorite(){
-
-        return $$this->belongsTo(RoomFavorite::class, 'id', 'room_id');
+    public function comparison()
+    {
+        return $this->belongsTo(RoomFavorite::class, 'id', 'room_id')->selectRaw('room_id,count(*) as count')->groupBy('room_id');
     }
 
-    public function like(){
+
+    public function favorite()
+    {
+
+        return $this->belongsTo(RoomFavorite::class, 'id', 'room_id');
+    }
+
+    public function like()
+    {
         return $this->favorite()->selectRaw('room_id,count(*) as count')->groupBy('room_id');
     }
+
 }

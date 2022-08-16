@@ -13,6 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
+        //тут я сделал название таблицы не в соответствии с правилами Laravel, (надо было favorite_rooms).
         Schema::create('room_favorites', function (Blueprint $table) {
             $table->id();
             $table->foreignId('room_id')->references('id')->on('rooms');

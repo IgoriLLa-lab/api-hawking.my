@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreRoomFavoriteRequest;
-use App\Http\Requests\UpdateRoomFavoriteRequest;
-use App\Models\Api\V1\RoomFavorite;
+use App\Http\Resources\Api\V1\RoomResource;
+use App\Models\Api\V1\Room;
+use App\Models\Api\V1\RoomFavorite as Favorite;
+use Illuminate\Support\Facades\Cache;
 
 class RoomFavoriteController extends Controller
 {
@@ -16,62 +17,7 @@ class RoomFavoriteController extends Controller
      */
     public function index()
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreRoomFavoriteRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreRoomFavoriteRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Api\V1\RoomFavorite  $roomFavorite
-     * @return \Illuminate\Http\Response
-     */
-    public function show(RoomFavorite $roomFavorite)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Api\V1\RoomFavorite  $roomFavorite
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RoomFavorite $roomFavorite)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateRoomFavoriteRequest  $request
-     * @param  \App\Models\Api\V1\RoomFavorite  $roomFavorite
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateRoomFavoriteRequest $request, RoomFavorite $roomFavorite)
-    {
-        //
     }
 
     /**
@@ -80,8 +26,19 @@ class RoomFavoriteController extends Controller
      * @param  \App\Models\Api\V1\RoomFavorite  $roomFavorite
      * @return \Illuminate\Http\Response
      */
-    public function destroy(RoomFavorite $roomFavorite)
+    public function destroy(Favorite $roomFavorite)
     {
         //
+    }
+
+    public function favorite($id)
+    {
+        if (!Favorite::where(['room_id' => $id])->exists()) {
+            Favorite::create(['room_id' => $id]);
+        }
+
+        return response([
+            'message' => 'Объект добавлен в избранное'
+        ], 200);
     }
 }
