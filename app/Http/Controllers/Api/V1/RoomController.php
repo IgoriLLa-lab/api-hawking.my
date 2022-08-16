@@ -10,7 +10,9 @@ use App\Models\Api\V1\Image;
 use App\Models\Api\V1\Mortgage;
 use App\Models\Api\V1\Property;
 use App\Models\Api\V1\Room;
-use Database\Seeders\ImageSeeder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Api\V1\RoomFavorite as Favorite;
 
 class RoomController extends Controller
 {
@@ -21,24 +23,18 @@ class RoomController extends Controller
      */
     public function index()
     {
-        return RoomResource::collection(Room::with('city')->
+        Cache::forget('rooms');
+
+        Cache::forever('rooms', RoomResource::collection(Room::with('city')->
         with('area')->
         with('street')->
         with('seller')->
         with('image')->
         with('property')->
         with('mortgage')->
-        paginate());
-    }
+        paginate()));
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Cache::get('rooms');
     }
 
     /**
@@ -47,7 +43,8 @@ class RoomController extends Controller
      * @param \App\Http\Requests\Api\V1\StoreRoomRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRoomRequest $request)
+    public
+    function store(StoreRoomRequest $request)
     {
         $valReq = $request->validated();
 
@@ -78,6 +75,7 @@ class RoomController extends Controller
         };
 
         return new RoomResource($room);
+
     }
 
     /**
@@ -86,27 +84,19 @@ class RoomController extends Controller
      * @param \App\Models\Api\V1\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public
+    function show($id)
     {
-        return new RoomResource(Room::with('city')->
+        Cache::forever('one_room', new RoomResource(Room::with('city')->
         with('area')->
         with('street')->
         with('seller')->
         with('image')->
         with('property')->
         with('mortgage')->
-        findOrFail($id));
-    }
+        findOrFail($id)));
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
-    {
-        //
+        return Cache::get('one_room');
     }
 
     /**
@@ -116,9 +106,10 @@ class RoomController extends Controller
      * @param \App\Models\Api\V1\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRoomRequest $request, Room $room)
+    public
+    function update(UpdateRoomRequest $request, Room $room)
     {
-        //
+
     }
 
     /**
@@ -127,8 +118,20 @@ class RoomController extends Controller
      * @param \App\Models\Api\V1\Room $room
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Room $room)
+    public
+    function destroy(StoreRoomRequest $request)
     {
-        //
+
     }
+
+
+    public function like($id)
+    {
+
+        if (!Favorite::where(['room_id' => $id])->exists()) {
+            Favorite::create(['room_id' => $id]);
+        }
+
+    }
+
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\ComparisonController;
 use App\Http\Controllers\Api\V1\RoomController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
     Route::apiResource('room',RoomController::class);
+
+    Route::post('/compare/add', [ComparisonController::class, 'store']);
+    Route::get('/compare/view', [ComparisonController::class, 'index']);
+
+    Route::get('like/{id}', [RoomController::class, 'like']);
+
+
 });
