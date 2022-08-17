@@ -30,7 +30,8 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::delete('compare/delete/{id}', [ComparisonController::class, 'delete']);//delete one compare
 
     Route::get('favorite/{id}', [RoomFavoriteController::class, 'favorite']);//add to favorite
-    Route::get('favorite/all', [RoomFavoriteController::class, 'index']);//show favorite
+    Route::get('favorite', [RoomFavoriteController::class, 'index']);//show favorite
+    Route::delete('favorite/delete/{id}', [RoomFavoriteController::class, 'delete']);//delete one favorite
 
 
 });

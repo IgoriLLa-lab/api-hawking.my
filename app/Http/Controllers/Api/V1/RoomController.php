@@ -31,9 +31,11 @@ class RoomController extends Controller
         with('image')->
         with('property')->
         with('mortgage')->
-        paginate()));
+        get()));
 
-        return Cache::get('rooms');
+        return response([
+            'rooms' => Cache::get('rooms'),
+        ], 200);
     }
 
     /**
@@ -92,7 +94,9 @@ class RoomController extends Controller
         with('mortgage')->
         findOrFail($id)));
 
-        return Cache::get('one_room');
+        return response([
+            'room' => Cache::get('one_room'),
+        ], 200);
     }
 
     /**

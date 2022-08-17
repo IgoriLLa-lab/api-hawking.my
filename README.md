@@ -44,14 +44,7 @@ updated-at - дата обновления
 
 Таблица rooms (основная таблица в которой содержится вся информация о комнатах)
 id - уникальное значение int
-city_id - id города из таблицы cities
-area_id - id района из таблицы areas
-street_id - id улицы из таблицы streets
-seller_id - id продавца из таблицы sellers
-description - описание
-price - начальная цена
-created-at - дата создания
-updated-at - дата обновления
+city_name - город
 
 
 ## Выполнение курсовой:
