@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\AuthenticationController;
 use App\Http\Controllers\Api\V1\ComparisonController;
 use App\Http\Controllers\Api\V1\RoomController;
 use App\Http\Controllers\Api\V1\RoomFavoriteController;
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], function () {
 
-    Route::apiResource('room',RoomController::class);
+    Route::apiResource('room', RoomController::class);
 
     Route::get('compare/{id}', [ComparisonController::class, 'compare']);//add to compare
     Route::get('compare', [ComparisonController::class, 'index']);//show compare
@@ -33,5 +34,13 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::get('favorite', [RoomFavoriteController::class, 'index']);//show favorite
     Route::delete('favorite/delete/{id}', [RoomFavoriteController::class, 'delete']);//delete one favorite
 
+    Route::post('register', [AuthenticationController::class, 'register']);
+
+});
+
+Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'middleware' => 'auth:sanctum'], function () {
+
+    Route::delete('room/delete/{id}', [RoomController::class, 'delete']);//delete
+    Route::delete('room/update/{id}', [RoomController::class, 'update']);//update
 
 });

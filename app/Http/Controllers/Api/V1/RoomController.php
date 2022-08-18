@@ -104,24 +104,23 @@ class RoomController extends Controller
      *
      * @param \App\Http\Requests\Api\V1\UpdateRoomRequest $request
      * @param Room $room
-     * @return Response
      */
-    public
-    function update(UpdateRoomRequest $request, Room $room)
+    public function update(UpdateRoomRequest $request, Room $room)
     {
-
+        print_r('Заглушка метода Update');
     }
+
 
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified resource in storage.
      *
-     * @param Room $room
-     * @return Response
+     * @param \App\Http\Requests\Api\V1\UpdateRoomRequest $request
+     * @param $id
      */
-    public
-    function destroy(StoreRoomRequest $request)
+    public function delete($id)
     {
-
+        print_r('Заглушка метода Delete');
     }
+
 
 }
