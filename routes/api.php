@@ -35,6 +35,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1'], f
     Route::delete('favorite/delete/{id}', [RoomFavoriteController::class, 'delete']);//delete one favorite
 
     Route::post('register', [AuthenticationController::class, 'register']);
+    Route::post('login', [AuthenticationController::class, 'login']);
 
 });
 
@@ -42,5 +43,7 @@ Route::group(['prefix' => 'v1', 'namespace' => 'App\Http\Controllers\Api\V1', 'm
 
     Route::delete('room/delete/{id}', [RoomController::class, 'delete']);//delete
     Route::delete('room/update/{id}', [RoomController::class, 'update']);//update
+
+    Route::post('logout', [AuthenticationController::class, 'logout']);
 
 });

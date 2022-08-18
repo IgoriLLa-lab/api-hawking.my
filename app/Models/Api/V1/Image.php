@@ -14,7 +14,8 @@ class Image extends Model
     ];
 
 
-    public function room(){
+    public function room()
+    {
         return $this->belongsToMany(Room::class);
     }
 }

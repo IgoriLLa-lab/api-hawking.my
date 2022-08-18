@@ -9,7 +9,8 @@ class Seller extends Model
 {
     use HasFactory;
 
-    public function room(){
+    public function room()
+    {
         return $this->hasMany(Room::class);
     }
 }
