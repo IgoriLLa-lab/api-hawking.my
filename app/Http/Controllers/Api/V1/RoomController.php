@@ -10,44 +10,42 @@ use App\Models\Api\V1\Image;
 use App\Models\Api\V1\Mortgage;
 use App\Models\Api\V1\Property;
 use App\Models\Api\V1\Room;
-use Database\Seeders\ImageSeeder;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cache;
 
 class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
-        return RoomResource::collection(Room::with('city')->
+        Cache::forget('rooms');
+
+        Cache::forever('rooms', RoomResource::collection(Room::with('city')->
         with('area')->
         with('street')->
         with('seller')->
         with('image')->
         with('property')->
         with('mortgage')->
-        paginate());
-    }
+        get()));
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response([
+            'rooms' => Cache::get('rooms'),
+        ], 200);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \App\Http\Requests\Api\V1\StoreRoomRequest $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function store(StoreRoomRequest $request)
+    public
+    function store(StoreRoomRequest $request): Response|RoomResource
     {
         $valReq = $request->validated();
 
@@ -78,57 +76,51 @@ class RoomController extends Controller
         };
 
         return new RoomResource($room);
+
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): Response
     {
-        return new RoomResource(Room::with('city')->
+        Cache::forever('one_room', new RoomResource(Room::with('city')->
         with('area')->
         with('street')->
         with('seller')->
         with('image')->
         with('property')->
         with('mortgage')->
-        findOrFail($id));
-    }
+        findOrFail($id)));
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Room $room)
-    {
-        //
+        return response([
+            'room' => Cache::get('one_room'),
+        ], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \App\Http\Requests\Api\V1\UpdateRoomRequest $request
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
+     * @param Room $room
      */
     public function update(UpdateRoomRequest $request, Room $room)
     {
-        //
+        print_r('Заглушка метода Update');
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Delete the specified resource in storage.
      *
-     * @param \App\Models\Api\V1\Room $room
-     * @return \Illuminate\Http\Response
+     * @param \App\Http\Requests\Api\V1\UpdateRoomRequest $request
+     * @param $id
      */
-    public function destroy(Room $room)
+    public function delete($id)
     {
-        //
+        print_r('Заглушка метода Delete');
     }
+
+
 }

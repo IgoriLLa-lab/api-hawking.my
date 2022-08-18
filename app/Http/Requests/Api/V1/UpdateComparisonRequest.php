@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\V1;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRoomRequest extends FormRequest
+class UpdateComparisonRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UpdateRoomRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -24,7 +24,15 @@ class UpdateRoomRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'city_id' => ['required'],
+            'area_id'=> ['required'],
+            'street_id'=> ['required'],
+            'seller_id'=> ['required'],
+            'description'=> ['required'],
+            'images' => ['required'],
+            'properties' => ['required'],
+            'mortgages' => ['required'],
+            'price'=> ['required'],
         ];
     }
 }
