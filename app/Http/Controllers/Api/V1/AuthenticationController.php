@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Models\Api\V1\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AuthenticationController extends Controller
 {
@@ -34,5 +35,41 @@ class AuthenticationController extends Controller
 
         return response($response, 201);
 
+    }
+
+    public function login(Request $request)
+    {
+
+        $fieldsVal = $request->validate([
+            'email' => 'required|string',
+            'password' => 'required|string',
+        ]);
+
+        $user = User::where('email', $fieldsVal['email'])->first();
+
+        if (!$user || !Hash::check($fieldsVal['password'], $user->password)){
+            return response([
+                'message' => 'Password or Email not entered correctly'
+            ], 401);
+        }
+
+        $token = $user->createToken('AdminToken')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
+
+    }
+
+    public function logout(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+
+        return [
+            'message' => 'Logout'
+        ];
     }
 }
