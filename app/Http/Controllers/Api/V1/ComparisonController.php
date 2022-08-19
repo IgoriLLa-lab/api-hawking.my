@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\ComparisonResource;
 use App\Models\Api\V1\Comparison;
 use App\Models\Api\V1\Room;
+use Illuminate\Support\Facades\Cache;
 
 class ComparisonController extends Controller
 {
@@ -24,9 +25,13 @@ class ComparisonController extends Controller
             with('image')->
             with('property')->
             with('mortgage')->get());
+
+            Cache::forever('array', $arrayComparison);
         }
 
-        return $arrayComparison;
+        return response([
+            'room_comparison' => Cache::get('array'),
+        ], 200);
     }
 
     public function delete($id)
@@ -34,6 +39,8 @@ class ComparisonController extends Controller
 
         $room = Comparison::all()
             ->where('room_id', '=', $id);
+
+        Cache::forget($room);
 
         Comparison::destroy($room);
         return response([

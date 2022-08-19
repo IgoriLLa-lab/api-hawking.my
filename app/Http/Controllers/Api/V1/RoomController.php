@@ -84,7 +84,7 @@ class RoomController extends Controller
      */
     public function show($id): Response
     {
-        Cache::forever('one_room', new RoomResource(Room::with('city')->
+        $room = Cache::forever('one_room', new RoomResource(Room::with('city')->
         with('area')->
         with('street')->
         with('seller')->
