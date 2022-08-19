@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\V1\RoomFavoriteResource;
-use App\Http\Resources\Api\V1\RoomResource;
 use App\Models\Api\V1\Room;
 use App\Models\Api\V1\RoomFavorite;
 use App\Models\Api\V1\RoomFavorite as Favorite;
@@ -15,7 +14,7 @@ class RoomFavoriteController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
@@ -23,14 +22,17 @@ class RoomFavoriteController extends Controller
         $room_id = RoomFavorite::select('room_id')->get();
 
         foreach ($room_id as $id) {
-
             $arrayComparison[] = RoomFavoriteResource::collection(Room::where('id', '=', $id->room_id)->
             with('image')->
             with('property')->
             with('mortgage')->get());
+
+            Cache::forever('array', $arrayComparison);
         }
 
-        return $arrayComparison;
+        return response([
+            'room_favorite' => Cache::get('array'),
+        ], 200);
 
     }
 
@@ -38,6 +40,8 @@ class RoomFavoriteController extends Controller
     {
         $room = RoomFavorite::all()
             ->where('room_id', '=', $id);
+
+        Cache::forget($room);
 
         RoomFavorite::destroy($room);
         return response([
@@ -48,8 +52,10 @@ class RoomFavoriteController extends Controller
     public function favorite($id)
     {
         if (!Favorite::where(['room_id' => $id])->exists()) {
-            Favorite::create(['room_id' => $id]);
+            $id = Favorite::create(['room_id' => $id]);
         }
+
+        Cache::put('id', $id);
 
         return response([
             'message' => 'Объект добавлен в избранное'
