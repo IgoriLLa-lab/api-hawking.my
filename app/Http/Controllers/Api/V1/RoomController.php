@@ -22,7 +22,6 @@ class RoomController extends Controller
      */
     public function index(): Response
     {
-        Cache::forget('rooms');
 
         Cache::forever('rooms', RoomResource::collection(Room::with('city')->
         with('area')->
